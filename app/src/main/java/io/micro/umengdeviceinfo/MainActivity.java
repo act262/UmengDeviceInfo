@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,11 +29,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView text = (TextView) findViewById(android.R.id.text1);
+        // 需要权限
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        getInfo();
+    }
+
+    private void getInfo() {
+        TextView model = (TextView) findViewById(android.R.id.text1);
+        model.setText(android.os.Build.MODEL);
+
+        TextView text = (TextView) findViewById(android.R.id.text2);
         String deviceInfo = getDeviceInfo(this);
         text.setText(deviceInfo);
 
-        Log.i("DeviceInfo", deviceInfo);
+        Log.i("DeviceInfo Model:", android.os.Build.MODEL);
+        Log.i("DeviceInfo id", deviceInfo);
     }
 
     public static boolean checkPermission(Context context, String permission) {
